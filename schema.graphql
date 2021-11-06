@@ -1,5 +1,128 @@
-type ExampleEntity @entity {
-  id: ID!
-  block: Bytes!
-  transaction: Bytes!
+type PrimesAuctionHouse @entity {
+    id: ID! # "PrimesAuctionHouse"
+
+    address: Bytes!
+
+    primes: Bytes!
+
+    paused: Boolean!
+
+    timeBuffer: BigInt!
+
+    reservePrice: BigInt!
+
+    minBidIncrementPercentage: BigInt!
+
+    breedingCooldown: BigInt!
+
+    currentPrimeAuction: PrimeAuction
+}
+
+type PrimeBatch @entity {
+    id: ID!
+
+    active: Boolean!
+
+    # Merkle root hash
+    whitelist: Bytes
+
+    remaining: Int!
+}
+
+type PrimeAuction @entity {
+    id: ID!
+
+    prime: Prime!
+
+    startTime: BigInt!
+
+    endTime: BigInt!
+
+    bidder: Bytes
+
+    settled: Boolean!
+
+    winner: Bytes
+
+    amount: BigInt
+
+    bids: [PrimeAuctionBid!]! @derivedFrom(field: "primeAuction")
+}
+
+type PrimeAuctionBid @entity {
+    id: ID!
+
+    primeAuction: PrimeAuction!
+
+    value: BigInt!
+
+    sender: Bytes!
+
+    extended: Boolean!
+}
+
+type Prime @entity {
+    # Token ID (the number itself)
+    id: ID!
+
+    owner: Account!
+    claimed: Boolean!
+
+    # Breeding
+    parent1: Prime
+    parent2: Prime
+    childrenAsParent1: [Prime!]! @derivedFrom(field: "parent1")
+    childrenAsParent2: [Prime!]! @derivedFrom(field: "parent2")
+    lastBred: BigInt!
+
+    # On-chain maffs
+    isPrime: Boolean!
+    cousins: [Prime!]!
+    sexyPrimes: [Prime!]!
+    twins: [Prime!]!
+    primeIndex: Int
+    primeFactorCount: Int!
+    primeFactors: [Prime!]!
+
+    # Token URI/Metadata
+    image: String!
+    taxicabNumber: Boolean!
+    perfectNumber: Boolean!
+    eulersLuckyNumber: Boolean!
+    uniquePrime: Boolean!
+    friendlyNumber: Boolean!
+    colossallyAbundantNumber: Boolean!
+    fibonacciNumber: Boolean!
+    repdigitNumber: Boolean!
+    weirdNumber: Boolean!
+    triangularNumber: Boolean!
+    sophieGermainPrime: Boolean!
+    strongPrime: Boolean!
+    frugalNumber: Boolean!
+    squareNumber: Boolean!
+    emirp: Boolean!
+    magicNumber: Boolean!
+    luckyNumber: Boolean!
+    goodPrime: Boolean!
+    happyNumber: Boolean!
+    untouchableNumber: Boolean!
+    semiperfectNumber: Boolean!
+    harshadNumber: Boolean!
+    evilNumber: Boolean!
+
+    # Renting
+    isListed: Boolean!
+    isRentable: Boolean!
+    whitelistOnly: Boolean!
+    studFee: BigInt
+    deadline: BigInt
+    suitors: [Prime!]!
+}
+
+type Account @entity {
+    id: ID!
+
+    address: Bytes!
+
+    primes: [Prime!]! @derivedFrom(field: "owner")
 }

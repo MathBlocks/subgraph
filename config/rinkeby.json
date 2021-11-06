@@ -1,0 +1,15 @@
+{
+  "network": "rinkeby",
+  "Primes": {
+    "address": "0x652350a0dba48ac04c02e87f1f8d3c2b6b5ad857",
+    "startBlock": 9580288
+  },
+  "PrimesAuctionHouse": {
+    "address": "0x6cc5983d5c6aa01101d825c87526aa8bad5a06c1",
+    "startBlock": 9580290
+  },
+  "UpdateAttributes": {
+    "address": "0x00a6b62D13E4C87685C700F6318675366A342ce1",
+    "startBlock": 9593994
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "network": "mainnet",
+  "Primes": {
+    "address": "0x",
+    "startBlock": 0
+  },
+  "PrimesAuctionHouse": {
+    "address": "0x",
+    "startBlock": 0
+  }
+}

@@ -1,16 +1,24 @@
 {
-  "name": "primes",
-  "license": "UNLICENSED",
+  "name": "@mathblocks/primes-subgraph",
+  "license": "MIT",
   "scripts": {
-    "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ mathblocks/primes",
-    "create-local": "graph create --node http://localhost:8020/ mathblocks/primes",
-    "remove-local": "graph remove --node http://localhost:8020/ mathblocks/primes",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 mathblocks/primes"
+    "codegen": "graph codegen",
+    "prepare-codegen": "func() { yarn run --silent mustache \"./config/$1.json\" subgraph.template.yaml > subgraph.yaml && yarn run codegen; }; func",
+    "prepare:mainnet": "yarn run prepare-codegen mainnet",
+    "prepare:rinkeby": "yarn run prepare-codegen rinkeby",
+    "deploy:rinkeby": "graph deploy jameslefrere/stealth-launch-nft-shhh --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --access-token ",
+    "deploy:mainnet": "graph deploy mathblocks/primes --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --access-token "
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all",
+    "semi": false
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.22.2",
-    "@graphprotocol/graph-ts": "0.22.1"
+    "@graphprotocol/graph-cli": "^0.23.1",
+    "@graphprotocol/graph-ts": "^0.23.1",
+    "mustache": "^4.2.0",
+    "prettier": "^2.4.1"
   }
 }
