@@ -9,11 +9,7 @@ import {
   Transfer,
   UnListed,
 } from '../../generated/Primes/Primes'
-import {
-  PrimeBatch as PrimeBatchEntity,
-  Prime as PrimeEntity,
-  Account as AccountEntity,
-} from '../../generated/schema'
+import { PrimeBatch as PrimeBatchEntity } from '../../generated/schema'
 
 import { Prime } from '../Prime'
 import { Account } from '../Account'
@@ -25,10 +21,9 @@ export function handleBatchStarted(event: BatchStarted): void {
 
   let id = event.params.batchId.toString()
   let batch = new PrimeBatchEntity(id)
+  batch.whitelist = primes.batch0whitelist()
 
-  if (event.params.batchId.equals(BigInt.fromI32(0))) {
-    batch.whitelist = primes.batch0whitelist()
-  } else if (event.params.batchId.equals(BigInt.fromI32(1))) {
+  if (event.params.batchId.equals(BigInt.fromI32(1))) {
     batch.whitelist = primes.batch1whitelist()
 
     // Expire batch 0
@@ -43,7 +38,7 @@ export function handleBatchStarted(event: BatchStarted): void {
   }
 
   batch.active = true
-  batch.remaining = batchCheck.get('remaining')!.toBoolean()
+  batch.remaining = batchCheck.get('remaining')!.toBigInt().toI32()
   batch.save()
 }
 
@@ -91,6 +86,29 @@ export function handleListed(event: Listed): void {
 export function handlePrimeClaimed(event: PrimeClaimed): void {
   let primeEntity = Prime.getOrCreate(event.params.tokenId, event.address)
   primeEntity.claimed = true
+
+  {
+    let primes = PrimesContract.bind(event.address)
+    let batchCheck = primes.batchCheck()
+
+    let batchId = batchCheck.value1.toString()
+    let batchEntity = PrimeBatchEntity.load(batchId)
+
+    if (batchEntity == null) {
+      batchEntity = new PrimeBatchEntity(batchId)
+      batchEntity.active = batchCheck.value0
+
+      if (batchId == '0') {
+        batchEntity.whitelist = primes.batch0whitelist()
+      } else if (batchId == '1') {
+        batchEntity.whitelist = primes.batch1whitelist()
+      }
+    }
+
+    batchEntity.remaining = batchCheck.value2.toI32()
+    batchEntity.save()
+  }
+
   primeEntity.save()
 }
 

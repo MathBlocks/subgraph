@@ -3,6 +3,7 @@ import { Address, BigInt, Bytes } from '@graphprotocol/graph-ts'
 import {
   PrimeAuction,
   PrimeAuction as PrimeAuctionEntity,
+  PrimeBatch as PrimeBatchEntity,
   PrimesAuctionHouse as PrimesAuctionHouseEntity,
 } from '../generated/schema'
 import { PrimesAuctionHouse } from '../generated/PrimesAuctionHouse/PrimesAuctionHouse'
@@ -35,6 +36,16 @@ export namespace Auctions {
     primesAuctionHouseEntity.paused = false
 
     primesAuctionHouseEntity.save()
+
+    // Create batch 0
+    {
+      let batchCheck = primes.batchCheck()
+      let batch = new PrimeBatchEntity('0')
+      batch.whitelist = primes.batch0whitelist()
+      batch.active = true
+      batch.remaining = batchCheck.value2.toI32()
+      batch.save()
+    }
 
     return primesAuctionHouseEntity as PrimesAuctionHouseEntity
   }
