@@ -38,7 +38,11 @@ export function handleBatchStarted(event: BatchStarted): void {
   }
 
   batch.active = true
-  batch.remaining = batchCheck.get('remaining')!.toBigInt().toI32()
+  if (batchCheck.isSet('remaining')) {
+    batch.remaining = batchCheck.get('remaining')!.toBigInt().toI32()
+  } else {
+    batch.remaining = 0
+  }
   batch.save()
 }
 
