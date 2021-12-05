@@ -1,13 +1,15 @@
-import { Address, BigInt, Bytes } from '@graphprotocol/graph-ts'
+import { Address, BigInt } from '@graphprotocol/graph-ts'
 
 import {
   PrimeAuction,
   PrimeAuction as PrimeAuctionEntity,
   PrimeBatch as PrimeBatchEntity,
+  PrimeAuctionBid as PrimeAuctionBidEntity,
   PrimesAuctionHouse as PrimesAuctionHouseEntity,
 } from '../generated/schema'
 import { PrimesAuctionHouse } from '../generated/PrimesAuctionHouse/PrimesAuctionHouse'
 import { Primes } from '../generated/Primes/Primes'
+import { Account } from './Account'
 
 export namespace Auctions {
   export function getOrCreatePrimesAuctionHouse(
@@ -64,14 +66,14 @@ export namespace Auctions {
     let primesAuctionHouse = PrimesAuctionHouse.bind(
       Address.fromString(primesAuctionHouseEntity.address.toHexString()),
     )
-    let auctionData = primesAuctionHouse.auction().toMap()
+    let auctionData = primesAuctionHouse.auction()
 
     auctionEntity.prime = tokenId.toString()
-    auctionEntity.startTime = auctionData.get('startTime')!.toBigInt()
-    auctionEntity.endTime = auctionData.get('endTime')!.toBigInt()
-    auctionEntity.amount = auctionData.get('amount')!.toBigInt()
-    auctionEntity.bidder = auctionData.get('bidder')!.toAddress()
-    auctionEntity.settled = auctionData.get('settled')!.toBoolean()
+    auctionEntity.startTime = auctionData.value2
+    auctionEntity.endTime = auctionData.value3
+    auctionEntity.amount = auctionData.value1
+    auctionEntity.bidder = Account.getOrCreate(auctionData.value4).id
+    auctionEntity.settled = auctionData.value5
 
     auctionEntity.save()
 
@@ -80,17 +82,37 @@ export namespace Auctions {
 
   export function createBid(
     tokenId: BigInt,
-    sender: Bytes,
+    sender: Address,
     value: BigInt,
+    timestamp: BigInt,
   ): void {
     let auctionEntity = PrimeAuction.load(
       tokenId.toString(),
     ) as PrimeAuctionEntity
 
     auctionEntity.amount = value
-    auctionEntity.bidder = sender
-
+    auctionEntity.bidder = Account.getOrCreate(sender).id
+    auctionEntity.extended = false
     auctionEntity.save()
+
+    {
+      let id =
+        tokenId.toString() +
+        '.' +
+        sender.toHexString() +
+        '.' +
+        timestamp.toString()
+      let primeAuctionBidEntity = PrimeAuctionBidEntity.load(id)
+      if (primeAuctionBidEntity != null) {
+        return
+      }
+      primeAuctionBidEntity = new PrimeAuctionBidEntity(id)
+      primeAuctionBidEntity.sender = Account.getOrCreate(sender).id
+      primeAuctionBidEntity.primeAuction = auctionEntity.id
+      primeAuctionBidEntity.value = value
+      primeAuctionBidEntity.timestamp = timestamp
+      primeAuctionBidEntity.save()
+    }
   }
 
   export function extendAuction(tokenId: BigInt, endTime: BigInt): void {
@@ -98,20 +120,22 @@ export namespace Auctions {
       tokenId.toString(),
     ) as PrimeAuctionEntity
 
+    auctionEntity.extended = true
     auctionEntity.endTime = endTime
     auctionEntity.save()
   }
 
   export function settleAuction(
     tokenId: BigInt,
-    bidder: Bytes,
+    bidder: Address,
     amount: BigInt,
   ): void {
     let auctionEntity = PrimeAuction.load(
       tokenId.toString(),
     ) as PrimeAuctionEntity
 
-    auctionEntity.bidder = bidder
+    auctionEntity.bidder = Account.getOrCreate(bidder).id
+    auctionEntity.winner = Account.getOrCreate(bidder).id
     auctionEntity.amount = amount
     auctionEntity.settled = true
     auctionEntity.save()

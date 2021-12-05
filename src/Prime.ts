@@ -34,6 +34,7 @@ export namespace Prime {
     let primes = Primes.bind(primesAddress)
 
     primeEntity = new PrimeEntity(id.toString())
+    primeEntity.number = id.toI32()
 
     // Attributes in order, default to false
     primeEntity.taxicabNumber = false
@@ -69,34 +70,51 @@ export namespace Prime {
     primeEntity.primeIndex = numberData.core.primeIndex
     primeEntity.primeFactorCount = numberData.core.primeFactorCount
 
-    primeEntity.sexyPrimes = []
-    primeEntity.cousins = []
-    primeEntity.twins = []
+    let primeIdx = BigInt.fromI32(numberData.core.primeIndex)
+    let twins = primes.twins(primeIdx)
+    let cousins = primes.cousins(primeIdx)
+    let sexyPrimes = primes.sexyPrimes(primeIdx)
+
+    let twinsArr = [] as string[]
+    let cousinsArr = [] as string[]
+    let sexyPrimesArr = [] as string[]
 
     if (primeEntity.isPrime) {
-      let sexyPrimesArr = numberData.prime.sexyPrimes
-      for (let i = 0; i < sexyPrimesArr.length; i++) {
-        primeEntity.sexyPrimes[i] = sexyPrimesArr[i].toString()
+      for (let i = 0; i < sexyPrimes.length; i++) {
+        if (sexyPrimes[i] == 0) {
+          continue
+        }
+        sexyPrimesArr.push(sexyPrimes[i].toString())
       }
 
-      let cousinsArr = numberData.prime.cousins
-      for (let i = 0; i < cousinsArr.length; i++) {
-        primeEntity.cousins[i] = cousinsArr[i].toString()
+      for (let i = 0; i < cousins.length; i++) {
+        if (cousins[i] == 0) {
+          continue
+        }
+        cousinsArr.push(cousins[i].toString())
       }
 
-      let twinsArr = numberData.prime.twins
-      for (let i = 0; i < twinsArr.length; i++) {
-        primeEntity.twins[i] = twinsArr[i].toString()
+      for (let i = 0; i < twins.length; i++) {
+        if (twins[i] == 0) {
+          continue
+        }
+        twinsArr.push(twins[i].toString())
       }
     }
+
+    primeEntity.twins = twinsArr
+    primeEntity.cousins = cousinsArr
+    primeEntity.sexyPrimes = sexyPrimesArr
 
     let numberData_ =
       // @ts-ignore
       changetype<Primes__getPrimeFactorsInput_numberDataStruct>(numberData)
-    let primeFactorsArr = primes.getPrimeFactors(id.toU32(), numberData_)
+
+    let primeFactors = primes.getPrimeFactors(id.toU32(), numberData_)
+
     primeEntity.primeFactors = []
-    for (let i = 0; i < primeFactorsArr.length; i++) {
-      primeEntity.primeFactors[i] = primeFactorsArr[i].toString()
+    for (let i = 0; i < primeFactors.length; i++) {
+      primeEntity.primeFactors[i] = primeFactors[i]
     }
 
     primeEntity.parent1 = numberData.core.parents[0].toString()

@@ -17,6 +17,7 @@ export function handleAuctionBid(event: AuctionBid): void {
     event.params.primeId,
     event.params.sender,
     event.params.value,
+    event.block.timestamp,
   )
 }
 

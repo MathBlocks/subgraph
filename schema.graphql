@@ -38,13 +38,15 @@ type PrimeAuction @entity {
 
     endTime: BigInt!
 
-    bidder: Bytes
+    bidder: Account
 
     settled: Boolean!
 
-    winner: Bytes
+    winner: Account
 
     amount: BigInt
+
+    extended: Boolean!
 
     bids: [PrimeAuctionBid!]! @derivedFrom(field: "primeAuction")
 }
@@ -56,14 +58,17 @@ type PrimeAuctionBid @entity {
 
     value: BigInt!
 
-    sender: Bytes!
+    sender: Account!
 
-    extended: Boolean!
+    timestamp: BigInt!
 }
 
 type Prime @entity {
-    # Token ID (the number itself)
+    # Token ID (the number itself, as a string)
     id: ID!
+
+    # The number itself
+    number: Int!
 
     owner: Account!
     claimed: Boolean!
@@ -82,7 +87,7 @@ type Prime @entity {
     twins: [Prime!]!
     primeIndex: Int
     primeFactorCount: Int!
-    primeFactors: [Prime!]!
+    primeFactors: [Int!]!
 
     # Token URI/Metadata
     image: String!
@@ -125,4 +130,6 @@ type Account @entity {
     address: Bytes!
 
     primes: [Prime!]! @derivedFrom(field: "owner")
+
+    primeAuctionBids: [PrimeAuctionBid!]! @derivedFrom(field: "sender")
 }
