@@ -215,9 +215,9 @@ export namespace Prime {
           primeEntity.untouchableNumber = true
         } else if (attributeName == 'Semiperfect') {
           primeEntity.semiperfectNumber = true
-        } else if (attributeName == 'Harshad Number') {
+        } else if (attributeName == 'Harshad') {
           primeEntity.harshadNumber = true
-        } else if (attributeName == 'Evil Number') {
+        } else if (attributeName == 'Evil') {
           primeEntity.evilNumber = true
         }
       }
