@@ -177,43 +177,43 @@ export namespace Prime {
           primeEntity.taxicabNumber = true
         } else if (attributeName == 'Perfect Number') {
           primeEntity.perfectNumber = true
-        } else if (attributeName == "Euler's Lucky Numbers") {
+        } else if (attributeName == "Euler's Lucky Number") {
           primeEntity.eulersLuckyNumber = true
         } else if (attributeName == 'Unique Prime') {
           primeEntity.uniquePrime = true
-        } else if (attributeName == 'Friendly Number') {
+        } else if (attributeName == 'Friendly') {
           primeEntity.friendlyNumber = true
-        } else if (attributeName == 'Colossally Abundant Number') {
+        } else if (attributeName == 'Colossally Abundant') {
           primeEntity.colossallyAbundantNumber = true
-        } else if (attributeName == 'Fibonacci Number') {
+        } else if (attributeName == 'Fibonacci') {
           primeEntity.fibonacciNumber = true
-        } else if (attributeName == 'Repdigit Number') {
+        } else if (attributeName == 'Repdigit') {
           primeEntity.repdigitNumber = true
-        } else if (attributeName == 'Weird Number') {
+        } else if (attributeName == 'Weird') {
           primeEntity.weirdNumber = true
-        } else if (attributeName == 'Triangular Number') {
+        } else if (attributeName == 'Triangular') {
           primeEntity.triangularNumber = true
         } else if (attributeName == 'Sophie Germain Prime') {
           primeEntity.sophieGermainPrime = true
         } else if (attributeName == 'Strong Prime') {
           primeEntity.strongPrime = true
-        } else if (attributeName == 'Frugal Number') {
+        } else if (attributeName == 'Frugal') {
           primeEntity.frugalNumber = true
-        } else if (attributeName == 'Square Number') {
+        } else if (attributeName == 'Square') {
           primeEntity.squareNumber = true
-        } else if (attributeName == 'EMIRP') {
+        } else if (attributeName == 'Emirp') {
           primeEntity.emirp = true
-        } else if (attributeName == 'Magic Number') {
+        } else if (attributeName == 'Magic') {
           primeEntity.magicNumber = true
-        } else if (attributeName == 'Lucky Number') {
+        } else if (attributeName == 'Lucky') {
           primeEntity.luckyNumber = true
         } else if (attributeName == 'Good Prime') {
           primeEntity.goodPrime = true
-        } else if (attributeName == 'Happy Number') {
+        } else if (attributeName == 'Happy') {
           primeEntity.happyNumber = true
-        } else if (attributeName == 'Untouchable Number') {
+        } else if (attributeName == 'Untouchable') {
           primeEntity.untouchableNumber = true
-        } else if (attributeName == 'Semiperfect Number') {
+        } else if (attributeName == 'Semiperfect') {
           primeEntity.semiperfectNumber = true
         } else if (attributeName == 'Harshad Number') {
           primeEntity.harshadNumber = true
