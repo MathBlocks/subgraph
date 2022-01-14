@@ -6,10 +6,10 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Primes
-    network: 'rinkeby'
+    network: 'mainnet'
     source:
-      address: '0x652350a0dba48ac04c02e87f1f8d3c2b6b5ad857'
-      startBlock: 9580288
+      address: '0xBDA937F5C5f4eFB2261b6FcD25A71A1C350FdF20'
+      startBlock: 13991570
       abi: Primes
     mapping:
       kind: ethereum/events
@@ -32,6 +32,8 @@ dataSources:
           handler: handleListed
         - event: PrimeClaimed(uint256)
           handler: handlePrimeClaimed
+        - event: RevealedAttributes(uint256,uint256)
+          handler: handleRevealedAttributes
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
         - event: UnListed(uint16)
@@ -39,10 +41,10 @@ dataSources:
 
   - kind: ethereum/contract
     name: PrimesAuctionHouse
-    network: 'rinkeby'
+    network: 'mainnet'
     source:
-      address: '0x6cc5983d5c6aa01101d825c87526aa8bad5a06c1'
-      startBlock: 9580290
+      address: '0x4357969Ba06ad99a3379C28B34034c994cae804D'
+      startBlock: 13991570
       abi: PrimesAuctionHouse
     mapping:
       kind: ethereum/events
@@ -75,28 +77,3 @@ dataSources:
           handler: handlePaused
         - event: Unpaused(address)
           handler: handleUnpaused
-
-  - kind: ethereum/contract
-    name: UpdateAttributes
-    network: 'rinkeby'
-    source:
-      address: '0x00a6b62D13E4C87685C700F6318675366A342ce1'
-      startBlock: 9593994
-      abi: UpdateAttributes
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - Prime
-      abis:
-        - name: Primes
-          file: ./abis/Primes.json
-        - name: PrimesAuctionHouse
-          file: ./abis/PrimesAuctionHouse.json
-        - name: UpdateAttributes
-          file: ./abis/UpdateAttributes.json
-      file: ./src/mappings/UpdateAttributes.ts
-      eventHandlers:
-        - event: Updated(uint16)
-          handler: handleUpdated

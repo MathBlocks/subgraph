@@ -1,11 +1,11 @@
 {
   "network": "mainnet",
   "Primes": {
-    "address": "0x",
-    "startBlock": 0
+    "address": "0xBDA937F5C5f4eFB2261b6FcD25A71A1C350FdF20",
+    "startBlock": 13991570
   },
   "PrimesAuctionHouse": {
-    "address": "0x",
-    "startBlock": 0
+    "address": "0x4357969Ba06ad99a3379C28B34034c994cae804D",
+    "startBlock": 13991570
   }
 }

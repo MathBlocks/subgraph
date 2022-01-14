@@ -8,6 +8,7 @@ import {
   PrimeClaimed,
   Transfer,
   UnListed,
+  RevealedAttributes,
 } from '../../generated/Primes/Primes'
 import { PrimeBatch as PrimeBatchEntity } from '../../generated/schema'
 
@@ -17,32 +18,30 @@ import { Account } from '../Account'
 export function handleBatchStarted(event: BatchStarted): void {
   let primes = PrimesContract.bind(event.address)
 
-  let batchCheck = primes.batchCheck().toMap()
-
   let id = event.params.batchId.toString()
   let batch = new PrimeBatchEntity(id)
-  batch.whitelist = primes.batch0whitelist()
 
-  if (event.params.batchId.equals(BigInt.fromI32(1))) {
-    batch.whitelist = primes.batch1whitelist()
+  let isBatch1 = event.params.batchId.equals(BigInt.fromI32(1))
+  let isBatch2 = event.params.batchId.equals(BigInt.fromI32(2))
 
+  if (isBatch1 || isBatch2) {
     // Expire batch 0
     let batch0 = PrimeBatchEntity.load('0') as PrimeBatchEntity
     batch0.active = false
     batch0.save()
-  } else if (event.params.batchId.equals(BigInt.fromI32(2))) {
+  }
+
+  if (isBatch2) {
     // Expire batch 1
     let batch1 = PrimeBatchEntity.load('1') as PrimeBatchEntity
     batch1.active = false
     batch1.save()
   }
 
-  batch.active = true
-  if (batchCheck.isSet('remaining')) {
-    batch.remaining = batchCheck.get('remaining')!.toBigInt().toI32()
-  } else {
-    batch.remaining = 0
-  }
+  let batchCheck = primes.batchCheck()
+  batch.active = batchCheck.value0
+  batch.remaining = batchCheck.value2.toI32()
+  batch.startTime = batchCheck.value3
   batch.save()
 }
 
@@ -79,11 +78,24 @@ export function handleBred(event: Bred): void {
 }
 
 export function handleListed(event: Listed): void {
-  let primeEntity = Prime.getOrCreate(
-    BigInt.fromI32(event.params.tokenId),
-    event.address,
-  )
+  let primes = PrimesContract.bind(event.address)
+  let tokenId = BigInt.fromI32(event.params.tokenId)
+  let rentalData = primes.rental(tokenId)
+
+  let primeEntity = Prime.getOrCreate(tokenId, event.address)
+
   primeEntity.isListed = true
+  primeEntity.isRentable = rentalData.value0
+  primeEntity.whitelistOnly = rentalData.value1
+  primeEntity.studFee = rentalData.value2
+  primeEntity.deadline = rentalData.value3
+
+  let suitorsArr = primes.getSuitors(tokenId)
+  primeEntity.suitors = []
+  for (let i = 0; i < suitorsArr.length; i++) {
+    primeEntity.suitors[i] = suitorsArr[i].toString()
+  }
+
   primeEntity.save()
 }
 
@@ -101,15 +113,10 @@ export function handlePrimeClaimed(event: PrimeClaimed): void {
     if (batchEntity == null) {
       batchEntity = new PrimeBatchEntity(batchId)
       batchEntity.active = batchCheck.value0
-
-      if (batchId == '0') {
-        batchEntity.whitelist = primes.batch0whitelist()
-      } else if (batchId == '1') {
-        batchEntity.whitelist = primes.batch1whitelist()
-      }
     }
 
     batchEntity.remaining = batchCheck.value2.toI32()
+    batchEntity.startTime = batchCheck.value3
     batchEntity.save()
   }
 
@@ -119,6 +126,13 @@ export function handlePrimeClaimed(event: PrimeClaimed): void {
 export function handleTransfer(event: Transfer): void {
   let primeEntity = Prime.getOrCreate(event.params.tokenId, event.address)
   primeEntity.owner = Account.getOrCreate(event.params.to).id
+  primeEntity.save()
+}
+
+export function handleRevealedAttributes(event: RevealedAttributes): void {
+  let primeEntity = Prime.getOrCreate(event.params.tokenId, event.address)
+  primeEntity = Prime.updateAttributes(primeEntity, event.address)
+  primeEntity.revealed = true
   primeEntity.save()
 }
 

@@ -32,6 +32,8 @@ dataSources:
           handler: handleListed
         - event: PrimeClaimed(uint256)
           handler: handlePrimeClaimed
+        - event: RevealedAttributes(uint256,uint256)
+          handler: handleRevealedAttributes
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
         - event: UnListed(uint16)
@@ -75,28 +77,3 @@ dataSources:
           handler: handlePaused
         - event: Unpaused(address)
           handler: handleUnpaused
-
-  - kind: ethereum/contract
-    name: UpdateAttributes
-    network: '{{network}}'
-    source:
-      address: '{{UpdateAttributes.address}}'
-      startBlock: {{UpdateAttributes.startBlock}}
-      abi: UpdateAttributes
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - Prime
-      abis:
-        - name: Primes
-          file: ./abis/Primes.json
-        - name: PrimesAuctionHouse
-          file: ./abis/PrimesAuctionHouse.json
-        - name: UpdateAttributes
-          file: ./abis/UpdateAttributes.json
-      file: ./src/mappings/UpdateAttributes.ts
-      eventHandlers:
-        - event: Updated(uint16)
-          handler: handleUpdated

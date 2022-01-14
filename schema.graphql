@@ -23,10 +23,9 @@ type PrimeBatch @entity {
 
     active: Boolean!
 
-    # Merkle root hash
-    whitelist: Bytes
-
     remaining: Int!
+
+    startTime: BigInt!
 }
 
 type PrimeAuction @entity {
@@ -72,6 +71,7 @@ type Prime @entity {
 
     owner: Account!
     claimed: Boolean!
+    revealed: Boolean!
 
     # Breeding
     parent1: Prime

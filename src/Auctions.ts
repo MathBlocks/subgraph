@@ -43,7 +43,6 @@ export namespace Auctions {
     {
       let batchCheck = primes.batchCheck()
       let batch = new PrimeBatchEntity('0')
-      batch.whitelist = primes.batch0whitelist()
       batch.active = true
       batch.remaining = batchCheck.value2.toI32()
       batch.save()

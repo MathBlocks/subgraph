@@ -61,6 +61,7 @@ export namespace Prime {
     primeEntity.harshadNumber = false
     primeEntity.evilNumber = false
 
+    primeEntity.revealed = false
     primeEntity = updateAttributes(primeEntity, primesAddress)
 
     primeEntity.owner = Account.getOrCreate(primes.ownerOf(id)).id
@@ -145,11 +146,9 @@ export namespace Prime {
     }
 
     primeEntity.suitors = []
-    if (rentalData.isSet('suitors')) {
-      let suitorsArr = rentalData.get('suitors')!.toBigIntArray()
-      for (let i = 0; i < suitorsArr.length; i++) {
-        primeEntity.suitors[i] = suitorsArr[i].toString()
-      }
+    let suitorsArr = primes.getSuitors(id)
+    for (let i = 0; i < suitorsArr.length; i++) {
+      primeEntity.suitors[i] = suitorsArr[i].toString()
     }
 
     primeEntity.save()
@@ -174,117 +173,51 @@ export namespace Prime {
       if (obj.isSet('value')) {
         let attributeName = obj.get('value')!.toString()
 
-        if (
-          attributeName == 'Attribute1' ||
-          attributeName == 'Taxicab Number'
-        ) {
+        if (attributeName == 'Taxicab Number') {
           primeEntity.taxicabNumber = true
-        } else if (
-          attributeName == 'Attribute2' ||
-          attributeName == 'Perfect Number'
-        ) {
+        } else if (attributeName == 'Perfect Number') {
           primeEntity.perfectNumber = true
-        } else if (
-          attributeName == 'Attribute3' ||
-          attributeName == "Euler's Lucky Numbers"
-        ) {
+        } else if (attributeName == "Euler's Lucky Numbers") {
           primeEntity.eulersLuckyNumber = true
-        } else if (
-          attributeName == 'Attribute4' ||
-          attributeName == 'Unique Prime'
-        ) {
+        } else if (attributeName == 'Unique Prime') {
           primeEntity.uniquePrime = true
-        } else if (
-          attributeName == 'Attribute5' ||
-          attributeName == 'Friendly Number'
-        ) {
+        } else if (attributeName == 'Friendly Number') {
           primeEntity.friendlyNumber = true
-        } else if (
-          attributeName == 'Attribute6' ||
-          attributeName == 'Colossally Abundant Number'
-        ) {
+        } else if (attributeName == 'Colossally Abundant Number') {
           primeEntity.colossallyAbundantNumber = true
-        } else if (
-          attributeName == 'Attribute7' ||
-          attributeName == 'Fibonacci Number'
-        ) {
+        } else if (attributeName == 'Fibonacci Number') {
           primeEntity.fibonacciNumber = true
-        } else if (
-          attributeName == 'Attribute8' ||
-          attributeName == 'Repdigit Number'
-        ) {
+        } else if (attributeName == 'Repdigit Number') {
           primeEntity.repdigitNumber = true
-        } else if (
-          attributeName == 'Attribute9' ||
-          attributeName == 'Weird Number'
-        ) {
+        } else if (attributeName == 'Weird Number') {
           primeEntity.weirdNumber = true
-        } else if (
-          attributeName == 'Attribute10' ||
-          attributeName == 'Triangular Number'
-        ) {
+        } else if (attributeName == 'Triangular Number') {
           primeEntity.triangularNumber = true
-        } else if (
-          attributeName == 'Attribute11' ||
-          attributeName == 'Sophie Germain Prime'
-        ) {
+        } else if (attributeName == 'Sophie Germain Prime') {
           primeEntity.sophieGermainPrime = true
-        } else if (
-          attributeName == 'Attribute12' ||
-          attributeName == 'Strong Prime'
-        ) {
+        } else if (attributeName == 'Strong Prime') {
           primeEntity.strongPrime = true
-        } else if (
-          attributeName == 'Attribute13' ||
-          attributeName == 'Frugal Number'
-        ) {
+        } else if (attributeName == 'Frugal Number') {
           primeEntity.frugalNumber = true
-        } else if (
-          attributeName == 'Attribute14' ||
-          attributeName == 'Square Number'
-        ) {
+        } else if (attributeName == 'Square Number') {
           primeEntity.squareNumber = true
-        } else if (attributeName == 'Attribute15' || attributeName == 'EMIRP') {
+        } else if (attributeName == 'EMIRP') {
           primeEntity.emirp = true
-        } else if (
-          attributeName == 'Attribute16' ||
-          attributeName == 'Magic Number'
-        ) {
+        } else if (attributeName == 'Magic Number') {
           primeEntity.magicNumber = true
-        } else if (
-          attributeName == 'Attribute17' ||
-          attributeName == 'Lucky Number'
-        ) {
+        } else if (attributeName == 'Lucky Number') {
           primeEntity.luckyNumber = true
-        } else if (
-          attributeName == 'Attribute18' ||
-          attributeName == 'Good Prime'
-        ) {
+        } else if (attributeName == 'Good Prime') {
           primeEntity.goodPrime = true
-        } else if (
-          attributeName == 'Attribute19' ||
-          attributeName == 'Happy Number'
-        ) {
+        } else if (attributeName == 'Happy Number') {
           primeEntity.happyNumber = true
-        } else if (
-          attributeName == 'Attribute20' ||
-          attributeName == 'Untouchable Number'
-        ) {
+        } else if (attributeName == 'Untouchable Number') {
           primeEntity.untouchableNumber = true
-        } else if (
-          attributeName == 'Attribute21' ||
-          attributeName == 'Semiperfect Number'
-        ) {
+        } else if (attributeName == 'Semiperfect Number') {
           primeEntity.semiperfectNumber = true
-        } else if (
-          attributeName == 'Attribute22' ||
-          attributeName == 'Harshad Number'
-        ) {
+        } else if (attributeName == 'Harshad Number') {
           primeEntity.harshadNumber = true
-        } else if (
-          attributeName == 'Attribute23' ||
-          attributeName == 'Evil Number'
-        ) {
+        } else if (attributeName == 'Evil Number') {
           primeEntity.evilNumber = true
         }
       }
