@@ -173,9 +173,9 @@ export namespace Prime {
       if (obj.isSet('value')) {
         let attributeName = obj.get('value')!.toString()
 
-        if (attributeName == 'Taxicab Number') {
+        if (attributeName == 'Taxicab') {
           primeEntity.taxicabNumber = true
-        } else if (attributeName == 'Perfect Number') {
+        } else if (attributeName == 'Perfect') {
           primeEntity.perfectNumber = true
         } else if (attributeName == "Euler's Lucky Number") {
           primeEntity.eulersLuckyNumber = true
